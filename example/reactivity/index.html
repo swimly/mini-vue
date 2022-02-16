@@ -9,6 +9,7 @@
 <body>
   <script type="module">
     import {reactive, effect} from '../../dist/index.esm.js'
+    // 创建响应式对象
     const user = reactive({
       age: 10
     })
@@ -16,9 +17,13 @@
     effect(() => {
       nextAge = user.age + 1
     })
-    console.log(nextAge === 11)
-    user.age ++
-    console.log(nextAge === 12)
+    console.log(nextAge == 11)
+    console.log(user.age, nextAge)
+    // update
+    console.log('即将要改变', user, 'age')
+    user.age = 12
+    console.log(user, nextAge)
+    console.log(nextAge == 12)
   </script>
 </body>
 </html>
