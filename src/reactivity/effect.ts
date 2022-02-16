@@ -48,7 +48,6 @@ export const track = (target, key) => {
  * @param key 
  */
 export const trigger = (target, key) => {
-  console.log(target, '改变了', key, Reflect.get(target, key))
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
   for (const effect of dep) {

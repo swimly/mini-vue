@@ -13,17 +13,14 @@
     const user = reactive({
       age: 10
     })
-    let nextAge
+    let nage;
     effect(() => {
-      nextAge = user.age + 1
+      nage = user.age + 1
     })
-    console.log(nextAge == 11)
-    console.log(user.age, nextAge)
-    // update
-    console.log('即将要改变', user, 'age')
+    console.log(nage)
     user.age = 12
-    console.log(user, nextAge)
-    console.log(nextAge == 12)
+    console.log(nage)
+    
   </script>
 </body>
 </html>
