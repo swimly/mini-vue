@@ -8,11 +8,12 @@ let activeEffect
  */
 class ReactiveEffect {
   private _fn:any; //存储class传进来的fn
-  constructor (fn) {
+  constructor (fn, public scheduler?) {
     this._fn = fn  //将class传入的fn赋值给_fn
   }
   public run () {
     activeEffect = this  //将当前实例effect赋值给activeEffect
+    // 返回fn执行结果
     return this._fn() //执行class传入的fn
   }
 }
@@ -21,9 +22,10 @@ class ReactiveEffect {
  * 
  * @param fn 函数类型
  */
- export function effect (fn) {
-  const _effect = new ReactiveEffect(fn)
+ export function effect (fn, options:any = {}) {
+  const _effect = new ReactiveEffect(fn, options.scheduler)
   _effect.run()
+  // 将当前的run函数返回并改变this指向
   return _effect.run.bind(_effect)
 }
 
@@ -64,7 +66,12 @@ export const trigger = (target, key) => {
   let dep = depsMap.get(key)
   //为解决浏览器环境能执行
   dep.forEach((effect) => {
-    effect.run()
+    console.log(effect)
+    if (effect.scheduler) {
+      effect.scheduler()
+    } else {
+      effect.run()
+    }
   })
   // 浏览器环境，下面的方式不会执行
   // for (const effect of dep) {
