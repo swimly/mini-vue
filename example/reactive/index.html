@@ -7,18 +7,17 @@
   <title>Document</title>
 </head>
 <body>
+  <script src="../asset/main.js"></script>
   <script type="module">
     import {reactive, effect} from '../../dist/index.esm.js'
     // 创建响应式对象
-    const user = reactive({
-      age: 10
-    })
-    let nage;
-    effect(() => {
-      nage = user.age + 1
-    })
-    user.age = 12
-    
+    print('reactive')
+    const original = {
+      foo: 1
+    }
+    const observed = reactive(original)
+    test(`observed和original不相等`, observed !== original)
+    test(`observed中的foo等于1`, observed.foo === 1)
   </script>
 </body>
 </html>

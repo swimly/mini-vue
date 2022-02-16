@@ -18,11 +18,21 @@ class ReactiveEffect {
 }
 
 /**
+ * 
+ * @param fn 函数类型
+ */
+ export function effect (fn) {
+  const _effect = new ReactiveEffect(fn)
+  _effect.run()
+  return _effect.run.bind(_effect)
+}
+
+/**
  * 依赖收集
  * @param target 
  * @param key 
  */
-export const track = (target, key) => {
+ export const track = (target, key) => {
   // target -> key -> dep
   // debugger
   // 通过target从targetMap中查找对应的depsMap
@@ -52,17 +62,12 @@ export const trigger = (target, key) => {
   // debugger
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
-  for (const effect of dep) {
+  //为解决浏览器环境能执行
+  dep.forEach((effect) => {
     effect.run()
-  }
-}
-
-/**
- * 
- * @param fn 函数类型
- */
- export function effect (fn) {
-  const _effect = new ReactiveEffect(fn)
-  _effect.run()
-  return _effect.run.bind(_effect)
+  })
+  // 浏览器环境，下面的方式不会执行
+  // for (const effect of dep) {
+  //   effect.run()
+  // }
 }
