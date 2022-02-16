@@ -4,6 +4,8 @@ import { initProps } from "./componentProps"
 import { publicInstanceProxyHandlers } from "./componentPublicInstance"
 import { initSlots } from "./componentSlots"
 
+let currentInstance = null
+
 export function createComponentInstance (vnode) {
   const component = {
     vnode,
@@ -29,9 +31,11 @@ function setupStateFulComponent(instance: any) {
   instance.proxy = new Proxy({_: instance}, publicInstanceProxyHandlers)
   const {setup} = component
   if (setup) {
+    setCurrentInstance(instance)
     const setupResult = setup(shallowReadonly(instance.props), {
       emit: instance.emit
     })
+    setCurrentInstance(null)
     handleSetupResult(instance, setupResult)
   }
 }
@@ -49,3 +53,10 @@ function finishComponentSetup(instance: any) {
   }
 }
 
+export function getCurrentInstance () {
+  return currentInstance
+}
+
+export function setCurrentInstance (instance) {
+  currentInstance = instance
+}
