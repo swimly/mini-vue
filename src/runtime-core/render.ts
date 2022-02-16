@@ -1,6 +1,7 @@
 import { isObject } from "../shared/index"
 import { createComponentInstance, setupComponent } from "./component"
 import { ShapeFlags } from "../shared/ShapeFlags"
+import { Fragment, Text } from "./vnode"
 
 export function render (vnode, container) {
   patch(vnode, container)
@@ -8,11 +9,22 @@ export function render (vnode, container) {
 
 function patch (vnode, container) {
   //TODO 判断vnode是不是一个element
-  const {shapeFlag} = vnode
-  if (shapeFlag & ShapeFlags.ELEMENT) {
-    processElement(vnode, container)
-  } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    processComponent(vnode, container)
+  const {type, shapeFlag} = vnode
+  // fragment -> 之渲染children
+  switch (type) {
+    case Fragment:
+      processFragment(vnode, container)
+      break;
+    case Text:
+      processText(vnode, container)
+      break;
+    default:
+      if (shapeFlag & ShapeFlags.ELEMENT) {
+        processElement(vnode, container)
+      } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+        processComponent(vnode, container)
+      }
+      break;
   }
 }
 
@@ -63,3 +75,13 @@ function mountChildren (vnode, container) {
     patch(v, container)
   })
 }
+
+function processFragment(vnode: any, container: any) {
+  mountChildren(vnode, container)
+}
+function processText(vnode: any, container: any) {
+  const {children} = vnode
+  const textNode = (vnode.el = document.createTextNode(children))
+  container.append(textNode)
+}
+
