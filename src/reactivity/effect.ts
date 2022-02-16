@@ -13,7 +13,7 @@ class ReactiveEffect {
   }
   public run () {
     activeEffect = this  //将当前实例effect赋值给activeEffect
-    this._fn() //执行class传入的fn
+    return this._fn() //执行class传入的fn
   }
 }
 
@@ -24,6 +24,7 @@ class ReactiveEffect {
  */
 export const track = (target, key) => {
   // target -> key -> dep
+  // debugger
   // 通过target从targetMap中查找对应的depsMap
   let depsMap = targetMap.get(target)
   if (!depsMap) {
@@ -48,6 +49,7 @@ export const track = (target, key) => {
  * @param key 
  */
 export const trigger = (target, key) => {
+  // debugger
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
   for (const effect of dep) {
@@ -62,4 +64,5 @@ export const trigger = (target, key) => {
  export function effect (fn) {
   const _effect = new ReactiveEffect(fn)
   _effect.run()
+  return _effect.run.bind(_effect)
 }

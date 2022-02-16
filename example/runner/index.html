@@ -9,16 +9,15 @@
 <body>
   <script type="module">
     import {reactive, effect} from '../../dist/index.esm.js'
-    // 创建响应式对象
-    const user = reactive({
-      age: 10
+    let foo = 10
+    const runner = effect(() => {
+      foo ++;
+      return 'foo'
     })
-    let nage;
-    effect(() => {
-      nage = user.age + 1
-    })
-    user.age = 12
-    
+    console.log(foo, 11);
+    const r = runner()
+    console.log(foo, 12);
+    console.log(r, 'foo')
   </script>
 </body>
 </html>
