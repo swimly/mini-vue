@@ -22,6 +22,7 @@ class RefImpl {
     if (!hasChanged(value, this._rawValue)) return
     this._value = convert(value)
     this._rawValue = value
+    console.log('应该执行1')
     triggerEffects(this.dep)
   }
 }

@@ -3,6 +3,7 @@ import { createComponentInstance, setupComponent } from "./component"
 import { ShapeFlags } from "../shared/ShapeFlags"
 import { Fragment, Text } from "./vnode"
 import { createAppApi } from "./createApp"
+import { effect } from "../reactivity/effect"
 
 export function createRenderer(options) {
   const {createElement: hostCreateElement, patchProp: hostPatchProp, insert: hostInsert} = options
@@ -42,10 +43,13 @@ export function createRenderer(options) {
   }
 
   function setupRenderEffect(instance: any, initialVNode, container) {
-    const { proxy } = instance
-    const subTree = instance.render.call(proxy)
-    patch(subTree, container, instance)
-    initialVNode.el = subTree.el
+    effect(() => {
+      const { proxy } = instance
+      const subTree = instance.render.call(proxy)
+      console.log(subTree, 'subtree')
+      patch(subTree, container, instance)
+      initialVNode.el = subTree.el
+    })
   }
 
   function processElement(vnode: any, container: any, parentComponent) {
@@ -68,13 +72,6 @@ export function createRenderer(options) {
     for (const key in props) {
       const val = props[key]
       // 绑定事件
-      const isOn = (key) => /^on[A-Z]/.test(key)
-      // if (isOn(key)) {
-      //   const event = key.slice(2).toLocaleLowerCase()
-      //   el.addEventListener(event, val)
-      // } else {
-      //   el.setAttribute(key, val) 
-      // }
       hostPatchProp(el, key, val)
     }
     // container.append(el)

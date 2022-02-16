@@ -7,7 +7,6 @@ const App = {
     const count = ref(0);
     const onClick = () => {
       count.value ++
-      console.log(count.value)
     }
     return {
       count,
@@ -21,7 +20,7 @@ const App = {
         id: 'root'
       },
       [
-        h('div', {}, `count:${this.count}`),
+        h('div', {}, `count` + this.count), //依赖收集
         h('button', {
           onClick: this.onClick
         }, 'click')
