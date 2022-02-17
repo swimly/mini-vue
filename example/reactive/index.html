@@ -9,7 +9,7 @@
 <body>
   <script src="../asset/main.js"></script>
   <script type="module">
-    import {reactive, effect, isReactive} from '../../dist/index.esm.js'
+    import {reactive, effect, isReactive, isProxy} from '../../dist/index.esm.js'
     // 创建响应式对象
     print('reactive')
     const original = {
@@ -34,6 +34,8 @@
     test(`observed1.nested也是响应式对象：${isReactive(observed1.nested)}`, isReactive(observed1.nested))
     test(`observed1.array也是响应式对象：${isReactive(observed1.nested)}`, isReactive(observed1.array))
     test(`observed1.array[0]也是响应式对象：${isReactive(observed1.nested)}`, isReactive(observed1.array[0]))
+
+    test(`observed是否proxy`, isProxy(observed))
   </script>
 </body>
 </html>

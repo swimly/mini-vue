@@ -9,7 +9,7 @@
 <body>
   <script src="../asset/main.js"></script>
   <script type="module">
-    import {reactive, effect, readonly, isReadonly} from '../../dist/index.esm.js'
+    import {reactive, effect, readonly, isReadonly, isProxy} from '../../dist/index.esm.js'
     // 创建响应式对象
     print('readonly')
     const original = {foo: 1, bar: {baz: 2}}
@@ -20,6 +20,7 @@
     test(`wrapped.bar是readonly`, isReadonly(wrapped.bar))
     test(`original.bar不是readonly`, !isReadonly(original.bar))
     test(`wrapped.foo等于1`, wrapped.foo === 1)
+    test(`wrapped是否proxy`, isProxy(wrapped))
     wrapped.foo = 2
   </script>
 </body>

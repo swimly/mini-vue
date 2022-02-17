@@ -49,6 +49,10 @@ export const isReadonly = (value) => {
   return !!value[ReactiveFlags.IS_READONLY]
 }
 
+export const isProxy = (value) => {
+  return isReactive(value) || isReadonly(value)
+}
+
 /**
  * 创建响应式对象
  * @param raw 
