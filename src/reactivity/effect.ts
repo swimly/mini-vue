@@ -10,7 +10,7 @@ let shouldTrack;
 /**
  * effect对象，所有的effect实例都是基于此。
  */
-class ReactiveEffect {
+export class ReactiveEffect {
   private _fn:any; //存储class传进来的fn
   private deps: any[] = [] //存储所有的deps
   public onStop?: () => void
