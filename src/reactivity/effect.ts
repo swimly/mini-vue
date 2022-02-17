@@ -3,7 +3,9 @@ import { extend } from "../shared";
 // 通过target对象存储的一个Map格式数据
 const targetMap = new Map()
 // 当前的effet，就是当前ReactiveEffect的实例对象
-let activeEffect
+let activeEffect;
+// 是否应该收集依赖
+let shouldTrack;
 
 /**
  * effect对象，所有的effect实例都是基于此。
@@ -21,9 +23,18 @@ class ReactiveEffect {
    * @returns 
    */
   public run () {
-    activeEffect = this  //将当前实例effect赋值给activeEffect
     // 返回fn执行结果
-    return this._fn() //执行class传入的fn
+    // 在这里的时候会收集依赖
+    // shouldTrack来做区分
+    if (!this.active) {
+      // stop状态
+      return this._fn() //执行class传入的fn
+    }
+    shouldTrack = true
+    activeEffect = this
+    const result = this._fn()
+    shouldTrack = false
+    return result
   }
   /**
    * 停止触发依赖
@@ -48,6 +59,7 @@ const cleanupEffect = (effect) => {
   effect.deps.forEach((dep:any) => {
     dep.delete(effect)
   })
+  effect.deps.length = 0
 }
 
 /**
@@ -64,12 +76,17 @@ const cleanupEffect = (effect) => {
   return runner
 }
 
+const isTracking = () => {
+  return shouldTrack && activeEffect !== undefined
+}
+
 /**
  * 依赖收集
  * @param target 
  * @param key 
  */
  export const track = (target, key) => {
+  if(!isTracking()) return
   // target -> key -> dep
   // debugger
   // 通过target从targetMap中查找对应的depsMap
@@ -86,8 +103,8 @@ const cleanupEffect = (effect) => {
     dep = new Set()
     depsMap.set(key, dep)
   }
-  if (!activeEffect) return;
   // 将当前的effect对象存入dep
+  if (dep.has(activeEffect)) return
   dep.add(activeEffect)
   // 将所有dep存入activeEffect
   activeEffect.deps.push(dep)
