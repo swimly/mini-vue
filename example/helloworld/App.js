@@ -1,5 +1,5 @@
 import { h } from '../../dist/index.esm.js'
-const App = {
+export const App = {
   name: 'app',
   render() {
     return h("div", {}, "hi," + this.msg)
@@ -10,5 +10,3 @@ const App = {
     }
   }
 }
-
-export default App

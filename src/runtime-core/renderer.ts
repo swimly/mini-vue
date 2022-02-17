@@ -6,6 +6,9 @@ export const render = (vnode, container) => {
 
 const patch = (vnode, container) => {
   // 处理组件
+
+  // TODO 判断vnode是不是一个element
+  processElement()
   processComponent(vnode, container)
 }
 
