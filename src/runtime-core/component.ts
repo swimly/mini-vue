@@ -1,16 +1,20 @@
+import { shallowReadonly } from ".."
+import { initProps } from "./componentProps"
 import { publicInstanceProxyHandlers } from "./componentPublicInstance"
 
 export const createComponentInstance = (vnode) => {
   const component = {
     vnode,
     type: vnode.type,
-    setupState: {}
+    setupState: {},
+    props: {}
   }
   return component
 }
 
 export const setupComponent = (instance) => {
-  // initProps()
+  // 初始化props
+  initProps(instance, instance.vnode.props)
   // initSlots()
   setupStatefulComponent(instance)
 }
@@ -23,7 +27,7 @@ function setupStatefulComponent(instance: any) {
   }, publicInstanceProxyHandlers)
   const {setup} = Component
   if (setup) {
-    const setupResult = setup() //setup返回的函数或者object
+    const setupResult = setup(shallowReadonly(instance.props)) //setup返回的函数或者object
     handleSetupResult(instance, setupResult)
   }
 }
