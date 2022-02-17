@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="../asset/main.js"></script>
+  <script type="module">
+    import { reactive, effect, readonly, isReadonly, isProxy, ref } from '../../dist/index.esm.js'
+      // 创建响应式对象
+      ; (function () {
+        print('happy path')
+        const a = ref(1)
+        test(`a.value等于1`, a.value === 1)
+      })()
+
+      ; (function () {
+        print('should be reactive')
+        const a = ref(1)
+        let dummy;
+        let calls = 0
+        effect(() => {
+          calls++;
+          dummy = a.value
+        })
+        test(`calls等于1`, calls === 1)
+        test(`dummy等于1`, dummy === 1)
+
+        a.value = 2
+
+        test(`calls等于2`, calls === 2)
+        test(`dummy等于2`, dummy === 2)
+
+        a.value = 2
+
+        test(`calls等于2`, calls === 2)
+        test(`dummy等于2`, dummy === 2)
+      })()
+
+      ; (function () {
+        print('should make nested properties reactive')
+        const a = ref({
+          count: 1
+        })
+        let dummy
+        effect(() => {
+          dummy = a.value.count
+        })
+        test(`断言dummy等于1`, dummy === 1)
+        a.value.count = 2
+        test(`断言dummy等于2`, dummy === 2)
+      })()
+  </script>
+</body>
+
+</html>

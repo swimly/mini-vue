@@ -1,6 +1,8 @@
 function print (msg) {
   const p = document.createElement('p')
   p.innerHTML = msg
+  p.style.fontWeight = 'bold'
+  p.style.color = 'red'
   document.body.appendChild(p)
 }
 
@@ -20,4 +22,8 @@ function test (msg, access) {
   p.appendChild(name)
   p.appendChild(result)
   document.body.append(p)
+}
+
+function expect (reason) {
+
 }

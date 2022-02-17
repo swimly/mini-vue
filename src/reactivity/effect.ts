@@ -76,7 +76,7 @@ const cleanupEffect = (effect) => {
   return runner
 }
 
-const isTracking = () => {
+export const isTracking = () => {
   return shouldTrack && activeEffect !== undefined
 }
 
@@ -103,6 +103,16 @@ const isTracking = () => {
     dep = new Set()
     depsMap.set(key, dep)
   }
+  // 上面仅仅为了获取到dep
+  trackEffects(dep)
+}
+
+/**
+ * 收集依赖
+ * @param dep 
+ * @returns 
+ */
+export const trackEffects = (dep) => {
   // 将当前的effect对象存入dep
   if (dep.has(activeEffect)) return
   dep.add(activeEffect)
@@ -120,6 +130,18 @@ export const trigger = (target, key) => {
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
   //为解决浏览器环境能执行
+  triggerEffect(dep)
+  // 浏览器环境，下面的方式不会执行
+  // for (const effect of dep) {
+  //   effect.run()
+  // }
+}
+
+/**
+ * 调用effect的run函数
+ * @param dep 
+ */
+export const triggerEffect = (dep) => {
   dep.forEach((effect) => {
     if (effect.scheduler) {
       effect.scheduler()
@@ -127,10 +149,6 @@ export const trigger = (target, key) => {
       effect.run()
     }
   })
-  // 浏览器环境，下面的方式不会执行
-  // for (const effect of dep) {
-  //   effect.run()
-  // }
 }
 
 export const stop = (runner) => {
