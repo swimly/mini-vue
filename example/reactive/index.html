@@ -21,6 +21,19 @@
 
     test(`判断original是否为响应式对象：${isReactive(original)}`, !isReactive(original))
     test(`判断observed是否为响应式对象：${isReactive(observed)}`, isReactive(observed))
+
+    const original1 = {
+      nested: {
+        foo: 1
+      },
+      array: [{
+        bar: 2
+      }]
+    }
+    const observed1 = reactive(original1)
+    test(`observed1.nested也是响应式对象：${isReactive(observed1.nested)}`, isReactive(observed1.nested))
+    test(`observed1.array也是响应式对象：${isReactive(observed1.nested)}`, isReactive(observed1.array))
+    test(`observed1.array[0]也是响应式对象：${isReactive(observed1.nested)}`, isReactive(observed1.array[0]))
   </script>
 </body>
 </html>

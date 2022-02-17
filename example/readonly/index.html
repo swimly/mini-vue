@@ -17,6 +17,8 @@
     test(`original不是readonly`, !isReadonly(original))
     test(`wrapped是readonly`, isReadonly(wrapped))
     test(`wrapped和original不相等`, wrapped !== original)
+    test(`wrapped.bar是readonly`, isReadonly(wrapped.bar))
+    test(`original.bar不是readonly`, !isReadonly(original.bar))
     test(`wrapped.foo等于1`, wrapped.foo === 1)
     wrapped.foo = 2
   </script>
