@@ -30,7 +30,7 @@ function mountElement (vnode: any, container: any) {
   if (typeof children === 'string') {
     el.textContent = children
   } else if (Array.isArray(children)) {
-    mountChildren(vnode, container)
+    mountChildren(vnode, el)
   }
   // props
   for (const key in props) {
@@ -53,7 +53,9 @@ function mountComponent(vnode: any, container) {
 }
 
 function setupRenderEffect(instance: any, container) {
-  const subTree = instance.render()
+  const {proxy} = instance
+  // 获取组件实例的proxy代理对象，并且将render函数的this指向改为proxy，这样在里面调用this的时候会自动指向这个proxy代理对象
+  const subTree = instance.render.call(proxy)
   patch(subTree, container)
 }
 
