@@ -1,3 +1,5 @@
+import { publicInstanceProxyHandlers } from "./componentPublicInstance"
+
 export const createComponentInstance = (vnode) => {
   const component = {
     vnode,
@@ -16,14 +18,9 @@ export const setupComponent = (instance) => {
 function setupStatefulComponent(instance: any) {
   const Component = instance.type
   // 通过给组件实例挂载一个proxy，并且再render中指定this为proxy，当render中调用this.XX的时候就会执行下面的get方法，在下面返回setupState的值即可。
-  instance.proxy = new Proxy({}, {
-    get (target, key) {
-      const {setupState} = instance
-      if (key in setupState) {
-        return setupState[key]
-      }
-    }
-  })
+  instance.proxy = new Proxy({
+    _: instance
+  }, publicInstanceProxyHandlers)
   const {setup} = Component
   if (setup) {
     const setupResult = setup() //setup返回的函数或者object

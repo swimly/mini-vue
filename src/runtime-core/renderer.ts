@@ -25,8 +25,9 @@ function processComponent(vnode: any, container: any) {
 }
 
 function mountElement (vnode: any, container: any) {
+  // vnode -> element -> div
   const {children, props} = vnode
-  const el = document.createElement(vnode.type)
+  const el = (vnode.el = document.createElement(vnode.type))
   if (typeof children === 'string') {
     el.textContent = children
   } else if (Array.isArray(children)) {
@@ -49,13 +50,15 @@ function mountChildren (vnode, container) {
 function mountComponent(vnode: any, container) {
   const instance = createComponentInstance(vnode)
   setupComponent(instance)
-  setupRenderEffect(instance, container)
+  setupRenderEffect(instance, vnode, container)
 }
 
-function setupRenderEffect(instance: any, container) {
+function setupRenderEffect(instance: any, vnode, container) {
   const {proxy} = instance
   // 获取组件实例的proxy代理对象，并且将render函数的this指向改为proxy，这样在里面调用this的时候会自动指向这个proxy代理对象
   const subTree = instance.render.call(proxy)
   patch(subTree, container)
+  // 所有element都mount
+  vnode.el = subTree.el
 }
 
