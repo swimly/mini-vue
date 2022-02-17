@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../asset/main.js"></script>
+  <script type="module">
+    import {reactive, effect, stop} from '../../dist/index.esm.js'
+    // 创建响应式对象
+    print('stop')
+    let dummy;
+    const obj = reactive({prop: 1})
+    const runner = effect(() => {
+      dummy = obj.prop
+    }, {
+      onStop () {
+        console.log('停止了')
+      }
+    })
+    obj.prop = 2
+    test(`dummy等于2`, dummy === 2)
+    stop(runner)
+    obj.prop = 3
+    test(`dummy等于2`, dummy === 2)
+    runner()
+    test(`dummy等于3`, dummy === 3)
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../asset/main.js"></script>
+  <script type="module">
+    import {reactive, effect} from '../../dist/index.esm.js'
+    // 创建响应式对象
+    print('scheduler')
+    let dummy;
+    let run
+    const scheduler = () => {
+      run = runner
+    }
+    const obj = reactive({foo: 1})
+    const runner = effect(() => {
+      dummy = obj.foo
+    }, {scheduler})
+    test(`dummy等于1`, dummy == 1)
+    // should be called on first trigger
+    obj.foo++
+    // should not run yet
+    test(`dummy等于1`, dummy == 1)
+    // manually run
+    console.log('run')
+    run()
+    // should have run
+    test(`dummy等于2`, dummy == 2)
+  </script>
+</body>
+</html>
