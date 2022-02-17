@@ -6,6 +6,7 @@ class RefImpl {
   private _value;
   public dep;
   public _rawValue;
+  public __v_isRef = true
   constructor (value) {
     // 看value是不是对象
     this._rawValue = value
@@ -36,4 +37,12 @@ const convert = (value) => {
 
 export const ref = (value) => {
   return new RefImpl(value)
+}
+
+export const isRef = (ref) => {
+  return !!ref.__v_isRef
+}
+
+export const unRef = (ref) => {
+  return isRef(ref) ? ref.value : ref
 }

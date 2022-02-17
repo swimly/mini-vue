@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="../asset/main.js"></script>
+  <script type="module">
+    import { reactive, effect, readonly, isReadonly, isProxy, ref, isRef, unRef } from '../../dist/index.esm.js'
+      // 创建响应式对象
+      ; (function () {
+        print('happy path')
+        text(`const a = ref(1)`)
+        const a = ref(1)
+        text(`const user = reactive({
+          age: 1
+        })`)
+        const user = reactive({
+          age: 1
+        })
+        test(`a是ref类型`, isRef(a))
+        test(`1不是ref类型`, !isRef(1))
+        test(`响应式对象user不是ref类型`, !isRef(user))
+      })()
+
+      ;(function () {
+        print('isRef')
+        text(`const a = ref(1)`)
+        const a = ref(1)
+        text(`const user = reactive({
+          age: 1
+        })`)
+        const user = reactive({
+          age: 1
+        })
+        test(`a是ref类型`, isRef(a))
+        test(`1不是ref类型`, !isRef(1))
+        test(`user不是ref类型`, !isRef(user))
+      })()
+
+      ;(function () {
+        print('unRef')
+        text(`const a = ref(1)`)
+        const a = ref(1)
+        test(`unRef(a)等于1`, unRef(a) === 1)
+        test(`unRef(1)等于1`, unRef(1) === 1)
+      })()
+
+  </script>
+</body>
+
+</html>
