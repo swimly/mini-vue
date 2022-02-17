@@ -9,7 +9,7 @@
 <body>
   <script src="../asset/main.js"></script>
   <script type="module">
-    import {reactive, effect} from '../../dist/index.esm.js'
+    import {reactive, effect, isReactive} from '../../dist/index.esm.js'
     // 创建响应式对象
     print('reactive')
     const original = {
@@ -18,6 +18,9 @@
     const observed = reactive(original)
     test(`observed和original不相等`, observed !== original)
     test(`observed中的foo等于1`, observed.foo === 1)
+
+    test(`判断original是否为响应式对象：${isReactive(original)}`, !isReactive(original))
+    test(`判断observed是否为响应式对象：${isReactive(observed)}`, isReactive(observed))
   </script>
 </body>
 </html>
