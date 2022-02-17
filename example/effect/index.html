@@ -1,27 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <script src="../asset/main.js"></script>
   <script type="module">
-    import {reactive, effect} from '../../dist/index.esm.js'
-    // 创建响应式对象
-    print('effect')
-    const user = reactive({
-      age: 10
-    })
-    let nextAge;
-    effect(() => {
-      nextAge = user.age + 1
-    })
-    test(`nextAge等于11`, nextAge === 11)
-    user.age ++
-    test(`user.age更新后，nextAge也会改变。`, nextAge == 12)
+    import { reactive, effect } from '../../dist/index.esm.js'
+      // 创建响应式对象
+      ; (function () {
+        print('happy path')
+        text(`创建响应式对象{age: 10}`)
+        const user = reactive({
+          age: 10
+        })
+        text(`创建变量nextAge`)
+        let nextAge;
+        text(`调用effect,在内部调用nextAge = user.age + 1`)
+        effect(() => {
+          nextAge = user.age + 1
+        })
+        test(`断言nextAge等于11`, nextAge === 11)
+        // update
+        text(`执行user.age ++`)
+        user.age++
+        test(`断言nextAge等于12`, nextAge === 12)
+      })()
+
+      ; (function () {
+        print('should return runner when call effect')
+        text(`创建变量foo = 10`)
+        let foo = 10
+        text(`const runner = effect(() => {
+          foo++
+          return 'foo'
+        })`)
+        const runner = effect(() => {
+          foo++
+          return 'foo'
+        })
+        test(`断言foo等于11`, foo === 11)
+        text(`const r = runner()`)
+        const r = runner()
+        test(`断言foo等于12`, foo === 12)
+        test(`断言r等于foo`, r === 'foo')
+      })()
   </script>
 </body>
+
 </html>

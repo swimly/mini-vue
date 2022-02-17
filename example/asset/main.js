@@ -24,6 +24,8 @@ function test (msg, access) {
   document.body.append(p)
 }
 
-function expect (reason) {
-
+function text (text) {
+  const p = document.createElement('p')
+  p.innerHTML = text
+  document.body.appendChild(p)
 }
