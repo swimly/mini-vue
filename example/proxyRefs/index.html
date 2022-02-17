@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="../asset/main.js"></script>
+  <script type="module">
+    import { reactive, effect, readonly, isReadonly, isProxy, ref, proxyRefs } from '../../dist/index.esm.js'
+      // 创建响应式对象
+      ; (function () {
+        print('proxyRefs')
+        text(`const user = {
+          age: ref(10),
+          name: 'swimly'
+        }`)
+        const user = {
+          age: ref(10),
+          name: 'swimly'
+        }
+        text(`const proxyUser = proxyRefs(user)`)
+        const proxyUser = proxyRefs(user)
+        test(`user.age.vaue等于10`, user.age.value === 10)
+        test(`proxyUser.age等于10`, proxyUser.age === 10)
+        test(`proxyUser.name等于swimly`, proxyUser.name === 'swimly')
+        text(`proxyUser.age = 20`)
+        proxyUser.age = 20
+        test(`proxyUser.age等于20`, proxyUser.age === 20)
+        test(`user.age.value等于20`, user.age.value === 20)
+        text(`proxyUser.age = ref(10)`)
+        proxyUser.age = ref(10)
+        test(`proxyUser.age等于10`, proxyUser.age === 10)
+        test(`user.age.value等于10`, user.age.value === 10)
+      })()
+  </script>
+</body>
+
+</html>
