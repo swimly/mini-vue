@@ -1,4 +1,4 @@
-import { shallowReadonly } from ".."
+import { proxyRefs, shallowReadonly } from ".."
 import { emit } from "./componentEmit"
 import { initProps } from "./componentProps"
 import { publicInstanceProxyHandlers } from "./componentPublicInstance"
@@ -15,6 +15,7 @@ export const createComponentInstance = (vnode, parent) => {
     slots: {},
     provides: parent ? parent.provides : {},
     parent,
+    isMounted: false,
     emit: () => {}
   }
   component.emit = emit.bind(null, component) as any
@@ -47,7 +48,7 @@ function setupStatefulComponent(instance: any) {
 }
 function handleSetupResult(instance, setupResult: any) {
   if (typeof setupResult === 'object') {
-    instance.setupState = setupResult
+    instance.setupState = proxyRefs(setupResult)
   }
   finishComponentSetup(instance)
 }

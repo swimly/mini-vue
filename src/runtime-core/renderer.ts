@@ -3,6 +3,7 @@ import { isObject } from "../shared"
 import { ShapeFlags } from "../shared/shapeFlags"
 import { createComponentInstance, setupComponent } from "./component"
 import { Fragment, Text } from "./vnode"
+import { effect } from "../reactivity/effect"
 
 export function createRenderer(options) {
 
@@ -13,48 +14,60 @@ export function createRenderer(options) {
   } = options
 
   const render = (vnode, container) => {
-    patch(vnode, container, null)
+    patch(null, vnode, container, null)
   }
 
-  const patch = (vnode, container, parentComponent) => {
+  // n1代表老的虚拟dom
+  // h2代表新的虚拟dom
+  const patch = (n1, n2, container, parentComponent) => {
     // 处理组件
     // TODO 判断vnode是不是一个element
     // processElement()
-    const { shapeFlag, type } = vnode
+    const { shapeFlag, type } = n2
     // Fragment -> 只渲染 children
     switch (type) {
       case Fragment:
-        processFragment(vnode, container, parentComponent)
+        processFragment(n1, n2, container, parentComponent)
         break;
       case Text:
-        processText(vnode, container)
+        processText(n1, n2, container)
         break;
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
-          processElement(vnode, container, parentComponent)
+          processElement(n1, n2, container, parentComponent)
         } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-          processComponent(vnode, container, parentComponent)
+          processComponent(n1, n2, container, parentComponent)
         }
         break;
     }
   }
 
-  function processText(vnode: any, container) {
-    const { children } = vnode
-    const textNode = (vnode.el = document.createTextNode(children))
+  function processText(n1: any, n2, container) {
+    const { children } = n2
+    const textNode = (n2.el = document.createTextNode(children))
     container.append(textNode)
   }
 
-  function processFragment(vnode: any, container, parentComponent) {
-    mountChildren(vnode, container, parentComponent)
+  function processFragment(n1: any, n2, container, parentComponent) {
+    mountChildren(n2, container, parentComponent)
   }
 
-  function processElement(vnode: any, container: any, parentComponent) {
-    mountElement(vnode, container, parentComponent)
+  function processElement(n1: any, n2, container: any, parentComponent) {
+    if (!n1) {
+      mountElement(n2, container, parentComponent)
+    } else {
+      patchElement(n1, n2, container)
+    }
   }
 
-  function processComponent(vnode: any, container: any, parentComponent) {
-    mountComponent(vnode, container, parentComponent)
+  function patchElement (n1, n2, container) {
+    console.log('patchElement')
+    console.log(`n1:`, n1)
+    console.log(`n2:`, n2)
+  }
+
+  function processComponent(n1: any, n2, container: any, parentComponent) {
+    mountComponent(n2, container, parentComponent)
   }
 
   function mountElement(vnode: any, container: any, parentComponent) {
@@ -69,13 +82,6 @@ export function createRenderer(options) {
     // props
     for (const key in props) {
       const val = props[key]
-      // const isOn = (key:string) => /^on[A-Z]/.test(key)
-      // if (isOn(key)) {
-      //   const event = key.slice(2).toLowerCase()
-      //   el.addEventListener(event, val)
-      // } else {
-      //   el.setAttribute(key, val)
-      // }
       hostPathProp(el, key, val)
     }
     // container.append(el)
@@ -84,7 +90,7 @@ export function createRenderer(options) {
 
   function mountChildren(vnode, container, parentComponent) {
     vnode.children.forEach((v) => {
-      patch(v, container, parentComponent)
+      patch(null, v, container, parentComponent)
     })
   }
 
@@ -95,12 +101,28 @@ export function createRenderer(options) {
   }
 
   function setupRenderEffect(instance: any, initinalVNode, container) {
-    const { proxy } = instance
-    // 获取组件实例的proxy代理对象，并且将render函数的this指向改为proxy，这样在里面调用this的时候会自动指向这个proxy代理对象
-    const subTree = instance.render.call(proxy)
-    patch(subTree, container, instance)
-    // 所有element都mount
-    initinalVNode.el = subTree.el
+    effect(() => {
+      if (!instance.isMounted) {
+        console.log('init')
+        const { proxy } = instance
+        // 获取组件实例的proxy代理对象，并且将render函数的this指向改为proxy，这样在里面调用this的时候会自动指向这个proxy代理对象
+        const subTree = (instance.subTree = instance.render.call(proxy))
+        console.log(subTree)
+        patch(null, subTree, container, instance)
+        // 所有element都mount
+        initinalVNode.el = subTree.el
+        instance.isMounted = true
+      } else {
+        const { proxy } = instance
+        // 获取组件实例的proxy代理对象，并且将render函数的this指向改为proxy，这样在里面调用this的时候会自动指向这个proxy代理对象
+        const subTree = instance.render.call(proxy)
+        const prevSubTree = instance.subTree
+        
+        // 更新subTree
+        instance.subTree = subTree
+        patch(prevSubTree,subTree, container, instance)
+      }
+    })
   }
   return {
     createApp: createAppAPI(render)

@@ -1,5 +1,4 @@
 import {h, ref} from '../../dist/index.esm.js'
-import {Foo} from './Foo.js'
 window.self = null
 const App = {
   name: 'app',
@@ -14,13 +13,14 @@ const App = {
     }
   },
   render () {
+    console.log(this.count)
     return h(
       "div",
       {
         id: 'root'
       },
       [
-        h('div', {}, `count` + this.count), //依赖收集
+        h('div', {}, `count：` + this.count), //依赖收集
         h('button', {
           onClick: this.onClick
         }, 'click')
