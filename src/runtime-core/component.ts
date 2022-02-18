@@ -2,6 +2,7 @@ import { shallowReadonly } from ".."
 import { emit } from "./componentEmit"
 import { initProps } from "./componentProps"
 import { publicInstanceProxyHandlers } from "./componentPublicInstance"
+import { initSlots } from "./componentSlots"
 
 export const createComponentInstance = (vnode) => {
   const component = {
@@ -9,6 +10,7 @@ export const createComponentInstance = (vnode) => {
     type: vnode.type,
     setupState: {},
     props: {},
+    slots: {},
     emit: () => {}
   }
   component.emit = emit.bind(null, component) as any
@@ -18,7 +20,8 @@ export const createComponentInstance = (vnode) => {
 export const setupComponent = (instance) => {
   // 初始化props
   initProps(instance, instance.vnode.props)
-  // initSlots()
+  // 初始化slot
+  initSlots(instance, instance.vnode.children)
   setupStatefulComponent(instance)
 }
 
