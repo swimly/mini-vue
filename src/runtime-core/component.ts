@@ -1,4 +1,5 @@
 import { shallowReadonly } from ".."
+import { emit } from "./componentEmit"
 import { initProps } from "./componentProps"
 import { publicInstanceProxyHandlers } from "./componentPublicInstance"
 
@@ -7,8 +8,10 @@ export const createComponentInstance = (vnode) => {
     vnode,
     type: vnode.type,
     setupState: {},
-    props: {}
+    props: {},
+    emit: () => {}
   }
+  component.emit = emit.bind(null, component) as any
   return component
 }
 
@@ -27,7 +30,9 @@ function setupStatefulComponent(instance: any) {
   }, publicInstanceProxyHandlers)
   const {setup} = Component
   if (setup) {
-    const setupResult = setup(shallowReadonly(instance.props)) //setup返回的函数或者object
+    const setupResult = setup(shallowReadonly(instance.props), {
+      emit: instance.emit
+    }) //setup返回的函数或者object
     handleSetupResult(instance, setupResult)
   }
 }

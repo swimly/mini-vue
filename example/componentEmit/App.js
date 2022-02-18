@@ -9,7 +9,7 @@ const App = {
         console.log('onAdd', a, b)
       },
       onAddFoo (a, b) {
-        console.log('onaddfoo', a, b)
+        console.log('onAddFoo', a, b)
       }
     })])
   },

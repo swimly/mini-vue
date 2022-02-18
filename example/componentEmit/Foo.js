@@ -3,7 +3,6 @@ import { h } from "../../dist/index.esm.js"
 export const Foo = {
   setup (props, {emit}) {
     const emitAdd = () => {
-      console.log('emit add')
       emit('add', 1, 2)
       emit('add-foo', 1, 2)
     }
