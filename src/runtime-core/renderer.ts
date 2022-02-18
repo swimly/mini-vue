@@ -1,12 +1,11 @@
 import { createAppAPI } from "./createApp"
-import { isObject } from "../shared"
+import { EMPTY_OBJ, isObject } from "../shared"
 import { ShapeFlags } from "../shared/shapeFlags"
 import { createComponentInstance, setupComponent } from "./component"
 import { Fragment, Text } from "./vnode"
 import { effect } from "../reactivity/effect"
 
 export function createRenderer(options) {
-
   const {
     createElement: hostCreateElement,
     patchProp: hostPathProp,
@@ -61,9 +60,28 @@ export function createRenderer(options) {
   }
 
   function patchElement (n1, n2, container) {
-    console.log('patchElement')
-    console.log(`n1:`, n1)
-    console.log(`n2:`, n2)
+    const oldProps = n1.props || EMPTY_OBJ
+    const newProps = n2.props || EMPTY_OBJ
+    const el = (n2.el = n1.el)
+    patchProps(el, oldProps, newProps)
+  }
+  function patchProps (el, oldProps, newProps) {
+    if (oldProps !== newProps) {
+      for (const key in newProps) {
+        const prevProp = oldProps[key]
+        const nextProp = newProps[key]
+        if (prevProp !== nextProp) {
+          hostPathProp(el, key, prevProp, nextProp)
+        }
+      }
+      if (oldProps !== EMPTY_OBJ) {
+        for (const key in oldProps) {
+          if (!(key in newProps)) {
+            hostPathProp(el, key, oldProps[key], null)
+          }
+        }
+      }
+    }
   }
 
   function processComponent(n1: any, n2, container: any, parentComponent) {
@@ -82,7 +100,7 @@ export function createRenderer(options) {
     // props
     for (const key in props) {
       const val = props[key]
-      hostPathProp(el, key, val)
+      hostPathProp(el, key, null, val)
     }
     // container.append(el)
     hostInsert(el, container)
@@ -103,11 +121,9 @@ export function createRenderer(options) {
   function setupRenderEffect(instance: any, initinalVNode, container) {
     effect(() => {
       if (!instance.isMounted) {
-        console.log('init')
         const { proxy } = instance
         // 获取组件实例的proxy代理对象，并且将render函数的this指向改为proxy，这样在里面调用this的时候会自动指向这个proxy代理对象
         const subTree = (instance.subTree = instance.render.call(proxy))
-        console.log(subTree)
         patch(null, subTree, container, instance)
         // 所有element都mount
         initinalVNode.el = subTree.el

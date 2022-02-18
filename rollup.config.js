@@ -1,5 +1,4 @@
 import typescript from '@rollup/plugin-typescript'
-import babel from '@rollup/plugin-babel'
 import pkg from './package.json'
 
 export default {
@@ -12,13 +11,6 @@ export default {
     format: 'es'
   }],
   plugins: [
-    typescript(),
-    babel({
-      extensions: ['.ts'],
-      babelHelpers: 'bundled',
-      presets: [
-        '@babel/preset-env'
-      ]
-    })
+    typescript()
   ]
 }
