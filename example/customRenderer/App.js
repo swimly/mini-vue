@@ -1,32 +1,13 @@
-import {h} from '../../dist/index.esm.js'
-import {Foo} from './Foo.js'
-window.self = null
+import { h } from "../../dist/index.esm.js"
+
 export const App = {
-  name: 'app',
-  render () {
-    window.self = this
-    return h('div', {
-      id: 'root',
-      class: ['red', 'hard'],
-      onClick () {
-        console.log('click')
-      },
-      onMousedown () {
-        console.log('down')
-      }
-    }, 
-    // [h('p', {class: 'red'}, 'hi'), h('p', {class: 'blue'}, 'mini-vue'), h('p', {}, `hi,${this.msg}`)]
-    [
-      h("div", {}, "hi," + this.msg),
-      h(Foo, {
-        count: 1
-      })
-    ]
-    )
-  },
   setup () {
-    return {
-      msg: 'mini-vue'
+    return{
+      x: 100,
+      y: 100
     }
+  },
+  render () {
+    return h("rect", {x: this.x, y: this.y})
   }
 }
