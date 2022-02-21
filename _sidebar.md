@@ -1,5 +1,9 @@
+- [首页](./README.md)
 - 前置知识
   - [Es6-Es10入门](./doc/Es6-Es10教程.md)
-- reactivity
-  - [响应式对象](./doc/响应式对象.md)
-  - [收集依赖](./doc/收集依赖.md)
+- [创建打包环境](./doc/打包环境.md)
+- Reactivity
+  - [Reactive 响应式对象](./doc/响应式对象.md)
+  - [Effect 观察者](./doc/观察者.md)
+  - [Track 依赖收集](./doc/依赖收集.md)
+  - [Trigger 触发依赖](./doc/触发依赖.md)

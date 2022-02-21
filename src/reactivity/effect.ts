@@ -126,11 +126,9 @@ export const trackEffects = (dep) => {
  * @param key 
  */
 export const trigger = (target, key) => {
-  console.log(target, key)
   // debugger
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
-  console.log('dep', dep)
   //为解决浏览器环境能执行
   triggerEffect(dep)
   // 浏览器环境，下面的方式不会执行

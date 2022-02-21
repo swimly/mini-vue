@@ -10,7 +10,6 @@ const shallowReadonlyGetter = createGetter(true, true)
 
 function createGetter (isReadonly = false, shallow = false) {
   return function get (target, key) {
-    console.log('get',target, key)
     if (key === ReactiveFlags.IS_REACTIVE) {
       return !isReadonly
     } else if (key === ReactiveFlags.IS_READONLY) {
@@ -36,7 +35,6 @@ function createGetter (isReadonly = false, shallow = false) {
 
 function createSetter () {
   return function set (target, key, value) {
-    console.log('set', target, key, value)
     // 设置target中key的值为value
     const res = Reflect.set(target, key, value)
     //触发依赖
