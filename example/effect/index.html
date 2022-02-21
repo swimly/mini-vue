@@ -23,6 +23,7 @@
         let nextAge;
         text(`调用effect,在内部调用nextAge = user.age + 1`)
         effect(() => {
+          console.log('执行effect')
           nextAge = user.age + 1
         })
         test(`断言nextAge等于11`, nextAge === 11)
