@@ -4,10 +4,10 @@
 
 #### Reactivity 响应式对象
 
-- [Reactive 响应式对象](./doc/响应式对象.md)
-- [Effect 观察者](./doc/观察者.md)
-- [Track 依赖收集](./doc/依赖收集.md)
-- [Trigger 触发依赖](./doc/触发依赖.md)
+- [Reactive 响应式对象](./doc/mini-vue/响应式对象.md)
+- [Effect 观察者](./doc/mini-vue/观察者.md)
+- [Track 依赖收集](./doc/mini-vue/依赖收集.md)
+- [Trigger 触发依赖](./doc/mini-vue/触发依赖.md)
 
 
 未完，待续！
