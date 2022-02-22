@@ -1,57 +1,71 @@
-### 返回runner
+## Runner
 
-我们一起了解一下这个`runner`到底是什么东西，有啥用。
+我们已经完成了响应式的整个流程，并已经达到数据改变的时候相关值也会跟着变化，今天我们就来处理一下`effect`函数的返回，之前，我们仅仅处理了如何调用`effect`传入的`fn`。
 
-?> 功能描述：当我们调用`effect(fn)`之后，返回的应该是一个`function`函数，这个函数便是我们所说的`runner`，当我们调用这个`runner`的时候，会再次去执行我们传入`effect`的函数(`fn`)，并且我们还能获取`fn`返回的数据。
+### 单测
+
+接下来，我们还是看一个单测，便于我们了解什么是我们所说的`runner`。
 
 ``` javascript
-const fn = () => {
-  //函数体
-}
-const runner = effect(fn)
-runner()  //这时候实际执行的是上面定义的fn
+// src/reactivity/effect.spec.ts
+describe("effect", () => {
+  ...
+  it ('should return runner when call effect', () => {
+    let foo = 10
+    // 将effect执行完之后返回的值赋值给runner
+    const runner = effect(() => {
+      foo ++
+      return 'foo'
+    })
+    expect(foo).toBe(11)
+    // 从这里，我们知道effect返回的是一个function，并且也有返回值
+    const r = runner()
+    // 到这一步，我们知道执行runner之后数值会更新，这个runner就是我们传入effect的fn
+    expect(foo).toBe(12)
+    expect(r).toBe('foo')
+  })
+})
 ```
 
-第一步，我们来处理调用`effect(fn)`之后，我们要将传入进来的`fn`返回出去。
+我们一起来分析上面的测试用例，从中我们可以得到3条信息
 
-**编辑`src/reactivity/effect.ts`**
+- 1、`effect`执行结果会返回一个`function`，我们称之为`runner`。
 
-通过返回`_effect.run`即可，这样在外面再次调用`effect`返回的函数，便相当于再次调用了`effect`内部的`run`，由于在`ReactiveEffect`的`run`方法中调用了`activeEffect = this`，所以在这里我们将返回的`runner`函数的`this`绑定为当前创建的`ReactiveEffect`实例，即`bind(_effect)`。
+- 2、我们可以接收`runner`返回的值，也就是说我们可以获取`effect(fn)`中`fn`的返回值
+
+- 3、当我们执行`runner`的时候，会再次执行`fn`函数
+  
+### 编码
+
+根据上面的结论，我们开始一步步来实现。
+
+#### 1、处理`effect`的返回值
+
+这里，我们之所以要用`bind`指定`_effect.run`函数的`this`指向，是因为在`ReactiveEffect`的`run`方法中，我们将`this`赋值给了`activeEffect`，为了避免`this`指向出问题。
 
 ``` javascript
 export function effect (fn) {
-  const _effect = new ReactiveEffect(fn)
-  _effect.run()
-  // 添加如下代码
-  return _effect.run.bind(_effect)
+  ...
+  return _effect.run.bind(effect)
 }
 ```
 
-接下来，我们再去处理`ReactiveEffect`中`run`的返回值，直接返回`fn`的执行结果即可。
+#### 2、处理`ReactiveEffect`中返回值
+
+我们直接在`run`中返回`this._fn()`的执行结果即可。
 
 ``` javascript
-public run () {
-  activeEffect = this
-  // 修改下面的代码
-  const res = this._fn()
-  return res
+class ReactiveEffect {
+  ...
+  public run () {
+    activeEffect = this
+    return this._fn()
+  }
 }
 ```
 
-直接将传入进来的`fn`的执行结果赋值给`res`，最后`return`出去即可。
+上面就是所有关于`runner`的的代码
 
-最后，我们创建一个测试文件
+### 总结
 
-``` javascript
-import {reactive, effect} from '../../dist/index.esm.js'
-let foo = 10
-const runner = effect(() => {
-  foo ++
-  return 'runner'
-})
-console.log(foo) // 11
-const r = runner()
-console.log(r, foo) //runner 12
-```
-
-第一次执行`effect`的时候，会将创建的`effect`实例对象中的`run`函数赋值给`runner`，并执行一次传入的`fn`，所以这时候`foo`会变成11，当执行`const r = runner()`的时候会再次调用`effect`传入的`fn`，并将返回值赋值给`r`，这时候`foo`会再次加1，并把返回值`runner`赋值给`r`。
+这里，我们可能还不大了解`runner`到底有啥用处，到了后面会慢慢理解，我们先理解`runner`的逻辑实现，以及他能干什么即可。
