@@ -80,4 +80,21 @@ describe("effect", () => {
     runner()
     expect(dummy).toBe(3)
   })
+  it("onStop", () => {
+    // 创建响应式对象obj
+    const obj = reactive({
+      foo: 1
+    })
+    const onStop = jest.fn() //定义了一个jest函数
+    let dummy
+    // 通过effect返回runner，并在第二个参数定义了一个onStop回调
+    const runner = effect(() => {
+      dummy = obj.foo
+    }, {
+      onStop
+    })
+    // 当执行stop之后，期望onStop回调被执行
+    stop(runner)
+    expect(onStop).toBeCalledTimes(1)
+  })
 })
