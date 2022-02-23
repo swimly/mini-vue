@@ -21,7 +21,7 @@ describe("effect", () => {
     const obj = reactive({foo: 1})
     // 将effect的返回值也就是runner赋值给runner
     const runner = effect(() => {
-      dumm = obj.foo
+      dummy = obj.foo
     }, {scheduler})
     // 这时候scheduler函数并未执行
     expect(scheduler).not.toHaveBeenCalled()
@@ -88,7 +88,26 @@ export function trigger (target, key) {
 }
 ```
 
-上面便是我们实现`scheduler`的所有流程及代码，我们再去看单测，已经可以测试通过了。
+上面便是我们实现`scheduler`的所有流程及代码。
+
+
+### 测试结果
+
+``` bash
+PS D:\user\desktop\mini-vue> yarn test
+yarn run v1.22.10
+$ jest
+ PASS  src/reactivity/tests/effect.spec.ts
+ PASS  src/reactivity/tests/index.spec.ts
+ PASS  src/reactivity/tests/reactive.spec.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        1.035 s
+Ran all test suites.
+Done in 2.26s.
+```
 
 ### 总结
 
