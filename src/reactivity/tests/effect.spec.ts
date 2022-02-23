@@ -14,5 +14,7 @@ describe("effect", () => {
     })
     // 赋值成功，说明在执行effect的时候会自动执行传入的函数
     expect(nextAge).toBe(11)
+    user.age ++
+    expect(nextAge).toBe(12)
   })
 })
