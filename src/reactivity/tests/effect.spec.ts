@@ -17,4 +17,18 @@ describe("effect", () => {
     user.age ++
     expect(nextAge).toBe(12)
   })
+  it ('should return runner when call effect', () => {
+    let foo = 10
+    // 将effect执行完之后返回的值赋值给runner
+    const runner = effect(() => {
+      foo ++
+      return 'foo'
+    })
+    expect(foo).toBe(11)
+    // 从这里，我们知道effect返回的是一个function，并且也有返回值
+    const r = runner()
+    // 到这一步，我们知道执行runner之后数值会更新，这个runner就是我们传入effect的fn
+    expect(foo).toBe(12)
+    expect(r).toBe('foo')
+  })
 })

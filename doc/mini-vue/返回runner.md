@@ -66,6 +66,24 @@ class ReactiveEffect {
 
 上面就是所有关于`runner`的的代码
 
+### 测试结果
+
+``` bash
+PS D:\user\desktop\mini-vue> yarn test
+yarn run v1.22.10
+$ jest
+ PASS  src/reactivity/tests/effect.spec.ts
+ PASS  src/reactivity/tests/reactive.spec.ts
+ PASS  src/reactivity/tests/index.spec.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        0.988 s, estimated 1 s
+Ran all test suites.
+Done in 2.21s.
+```
+
 ### 总结
 
 这里，我们可能还不大了解`runner`到底有啥用处，到了后面会慢慢理解，我们先理解`runner`的逻辑实现，以及他能干什么即可。
