@@ -1,4 +1,4 @@
-import {effect} from "../effect"
+import {effect, stop} from "../effect"
 import {reactive} from "../reactive"
 describe("effect", () => {
   it("happy path", () => {
@@ -57,5 +57,27 @@ describe("effect", () => {
     run()
     // 这时候dummy的值才会更新
     expect(dummy).toBe(2)
+  })
+  it("stop", () => {
+    let dummy;
+    // 创建响应式对象obj
+    const obj = reactive({prop: 1})
+    // 这就是之前的runner，当再次执行相当于再次执行了fn
+    const runner = effect(() => {
+      dummy = obj.prop
+    })
+    // 更改响应式对象obj的prop值
+    obj.prop = 2
+    // 这时候dummy也会跟着变，到这一步都是常规操作
+    expect(dummy).toBe(2)
+    // 这里就是我们今天要实现的，也是一个function，有一个参数，就是我们的runner
+    stop(runner)
+    // 我们再次更新响应式对象的值
+    obj.prop = 3
+    // 发现dummy这次没变了，这就是我们今天要实现的主要功能点
+    expect(dummy).toBe(2)
+    // 再次执行runner，不出意外，dummy再次更新了
+    runner()
+    expect(dummy).toBe(3)
   })
 })

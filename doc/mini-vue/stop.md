@@ -104,7 +104,7 @@ class ReactiveEffect {
   }
 }
 function cleanUpEffect (effect) {
-  effect.deps.forEach(dep:any => {
+  effect.deps.forEach((dep:any) => {
     dep.delete(effect)
   })
 }
@@ -131,6 +131,45 @@ public stop () {
 ```
 
 到这里，`stop`的功能就全部完成了。
+
+### 测试结果
+
+``` bash
+TypeError: Cannot read property 'deps' of undefined
+
+      46 |   }
+      47 |   dep.add(activeEffect)
+    > 48 |   activeEffect.deps.push(dep)
+         |                ^
+      49 | }
+      50 |
+      51 | export function trigger (target, key) {
+
+      at track (src/reactivity/effect.ts:48:16)
+      at Object.foo (src/reactivity/reactive.ts:6:7)
+      at Object.<anonymous> (src/reactivity/tests/reactive.spec.ts:9:16)
+```
+
+这次好像并没有那么顺利，提示我们`activeEffect`有可能为`undefined`，我们找到对应的代码。
+
+?> 解释：`activeEffect`是在`effect`中赋值的，而在`reactive.spec.ts`中，我们并没有调用`effect`，所以`activeEffect`自然就是`undefined`。
+
+### 解决问题
+
+如何解决上面的问题呢？如果当它为`undefined`的时候，我们就不让它触发依赖收集的相关操作不就是了,毕竟不涉及`effect`也就没必要去收集依赖。
+
+``` javascript
+// src/reactivity/effect.ts
+
+export function effect (target, key) {
+  ...
+  if (!activeEffect) return //在这里判断一下
+  dep.add(activeEffect)
+  activeEffect.deps.push(dep)
+}
+```
+
+再次执行测试，所有的测试都可通过，说明我们的问题解决了。
 
 ### 总结
 
