@@ -1,1 +1,3 @@
-export * from './reactive'
+export function add (a, b) {
+  return a + b
+}
