@@ -12,3 +12,4 @@
     - [Effect 返回runner](./doc/mini-vue/返回runner.md)
     - [Effect 的scheduler](./doc/mini-vue/scheduler.md)
     - [Effect 的stop](./doc/mini-vue/stop.md)
+    - [Effect 的onStop](./doc/mini-vue/onStop.md)

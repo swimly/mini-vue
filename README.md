@@ -6,8 +6,11 @@
 
 - [Reactive 响应式对象](./doc/mini-vue/响应式对象.md)
 - [Effect 观察者](./doc/mini-vue/观察者.md)
-- [Track 依赖收集](./doc/mini-vue/依赖收集.md)
-- [Trigger 触发依赖](./doc/mini-vue/触发依赖.md)
+- [依赖收集&触发依赖](./doc/mini-vue/依赖收集.md)
+- [Effect 返回runner](./doc/mini-vue/返回runner.md)
+- [Effect 的scheduler](./doc/mini-vue/scheduler.md)
+- [Effect 的stop](./doc/mini-vue/stop.md)
+- [Effect 的onStop](./doc/mini-vue/onStop.md)
 
 
 未完，待续！
