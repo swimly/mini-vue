@@ -51,7 +51,7 @@ describe("effect", () => {
 作为`effect`的入口，我们先给`effect`多加一个参数`options`，而`scheduler`是它的一个参数，有人可能会问，为啥不直接在第二个参数传入`scheduler`，当然为了后续传入更多的参数。
 
 ``` javascript
-export function effect (fn, options) {
+export function effect (fn, options:any = {}) {
   const _effect = new ReactiveEffect(fn, options.scheduler)
   ...
 }

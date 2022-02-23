@@ -105,7 +105,7 @@ class ReactiveEffect {
 }
 function cleanUpEffect (effect) {
   effect.deps.forEach(dep:any => {
-    dep.delete(this)
+    dep.delete(effect)
   })
 }
 ...

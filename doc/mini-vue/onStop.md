@@ -102,6 +102,9 @@ export function effect (fn, options:any = {}) {
 
 上面，我们通过创建一个`shared`公共函数库，然后在`effect`中引用它，进行对象的赋值操作，这样不仅简化了这里的代码，还抽出了一个公共的函数，后续可以在其他地方调用。
 
+### 解决bug
+
+到这里，我们已经完成了`onStop`的所有功能，但当我们执行所有单测的时候`yarn test`，会发现`activeEffect.deps.push(dep)`报错`Cannot read property 'deps' of undefined`，那我们就来看下相关的代码！
 
 ### 总结
 
