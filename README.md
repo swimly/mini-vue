@@ -2,7 +2,7 @@
 
 接下来我们将一起一步步揭开`vue3`的神秘面纱，带你了解`vue3`底层的实现逻辑，并写出属于自己的`vue3`源码项目。
 
-#### Reactivity 响应式对象
+#### 文章
 
 - [Reactive 响应式对象](./doc/mini-vue/响应式对象.md)
 - [Effect 观察者](./doc/mini-vue/观察者.md)
@@ -11,9 +11,16 @@
 - [Effect 的scheduler](./doc/mini-vue/scheduler.md)
 - [Effect 的stop](./doc/mini-vue/stop.md)
 - [Effect 的onStop](./doc/mini-vue/onStop.md)
+- [Readonly](./doc/mini-vue/readonly.md)
+- [isReactive&isReadonly](./doc/mini-vue/isReactive&isReadonly.md)
 
 
 未完，待续！
+
+
+#### 掘金专栏
+
+同步更新掘金[vue3源码解析专栏](https://juejin.cn/column/6976865076380696584)，欢迎大家阅读指正。
 
 
 ### 鸣谢
