@@ -14,3 +14,4 @@
     - [Effect 的stop](./doc/mini-vue/stop.md)
     - [Effect 的onStop](./doc/mini-vue/onStop.md)
     - [Readonly](./doc/mini-vue/readonly.md)
+    - [isReactive&isReadonly](./doc/mini-vue/isReactive&isReadonly.md)
